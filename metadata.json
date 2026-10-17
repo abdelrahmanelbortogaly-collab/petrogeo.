@@ -1,0 +1,8 @@
+{
+  "name": "PETROGEO - منصة طلاب البترول والجيولوجيا",
+  "description": "المنصة التعليمية المتكاملة لطلاب الجيولوجيا وهندسة البترول - كورسات مخصصة لكل فرقة، امتحانات تفاعلية، والمساعد الذكي المصري",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

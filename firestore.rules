@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function isDocumentOwner() {
+      return isAuthenticated() && request.resource.data.uid == request.auth.uid;
+    }
+    function isExistingOwner() {
+      return isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+
+    // Users collection: student registration and authentication lookup
+    match /users/{userId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Chat history collection: user-owned chat turns
+    match /chatHistory/{messageId} {
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow create: if isDocumentOwner();
+      allow update, delete: if isExistingOwner();
+    }
+
+    // Generated images collection
+    match /generatedImages/{imageId} {
+      allow read: if isAuthenticated() && (resource.data.uid == request.auth.uid || resource.data.isPublic == true);
+      allow create: if isDocumentOwner();
+      allow update, delete: if isExistingOwner();
+    }
+
+    // Exam submissions
+    match /examSubmissions/{submissionId} {
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow create: if isDocumentOwner();
+      allow update, delete: if false;
+    }
+  }
+}
