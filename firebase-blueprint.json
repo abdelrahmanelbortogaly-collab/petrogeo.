@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "users": {
+      "title": "User",
+      "description": "User profile with course progress and study stats",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "phone": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "instructor", "admin"] },
+        "password": { "type": "string" },
+        "year": { "type": "number" },
+        "department": { "type": "string" },
+        "boundDeviceId": { "type": "string" },
+        "boundDeviceName": { "type": "string" },
+        "enrolledCourses": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastLoginAt": { "type": "string", "format": "date-time" },
+        "streak": { "type": "number" }
+      },
+      "required": ["email", "displayName"]
+    },
+    "courses": {
+      "title": "Course",
+      "description": "Academic course with curriculum lectures, video URLs, and PDF materials",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "code": { "type": "string" },
+        "description": { "type": "string" },
+        "year": { "type": "number" },
+        "category": { "type": "string" },
+        "instructor": { "type": "string" },
+        "totalLectures": { "type": "number" },
+        "lectures": { "type": "array" }
+      },
+      "required": ["title", "year"]
+    },
+    "chatHistory": {
+      "title": "Chat History",
+      "description": "Multi-turn Gemini chat messages with grounding data",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "model"] },
+        "text": { "type": "string" },
+        "model": { "type": "string" },
+        "searchSources": { "type": "array" },
+        "mapLocations": { "type": "array" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "role", "text"]
+    },
+    "generatedImages": {
+      "title": "Generated Images",
+      "description": "Images generated or edited with Gemini image preview",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "prompt": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "prompt", "imageUrl"]
+    },
+    "examSubmissions": {
+      "title": "Exam Submissions",
+      "description": "User exam scores and answers",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "examId": { "type": "string" },
+        "score": { "type": "number" },
+        "totalQuestions": { "type": "number" },
+        "submittedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "examId", "score"]
+    }
+  }
+}

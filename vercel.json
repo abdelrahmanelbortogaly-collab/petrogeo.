@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api?__path=$1"
+    },
+    {
+      "source": "/((?!api|uploads|assets|favicon|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

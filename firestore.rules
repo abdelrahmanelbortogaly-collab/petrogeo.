@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function isDocumentOwner() {
+      return isAuthenticated() && request.resource.data.uid == request.auth.uid;
+    }
+    function isExistingOwner() {
+      return isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+
+    // Users collection: student registration, login, and admin account management
+    match /users/{userId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Courses and Lectures: real academic curriculum and lectures
+    match /courses/{courseId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Media files metadata and chunks (Videos, PDFs, Lecture materials)
+    match /media_files/{fileId} {
+      allow read, create, update, delete: if true;
+    }
+    match /media_chunks/{chunkId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Exams and Quizzes: academic exams and quizzes
+    match /exams/{examId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Platform settings and courses status
+    match /settings/{settingId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Chat history collection: user-owned chat turns
+    match /chatHistory/{messageId} {
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow create: if isDocumentOwner();
+      allow update, delete: if isExistingOwner();
+    }
+
+    // Generated images collection
+    match /generatedImages/{imageId} {
+      allow read: if isAuthenticated() && (resource.data.uid == request.auth.uid || resource.data.isPublic == true);
+      allow create: if isDocumentOwner();
+      allow update, delete: if isExistingOwner();
+    }
+
+    // Exam submissions
+    match /examSubmissions/{submissionId} {
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow create: if isDocumentOwner();
+      allow update, delete: if false;
+    }
+  }
+}
